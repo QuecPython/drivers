@@ -1,4 +1,4 @@
-# QuecPython_lib_bundles 代码提交说明
+# QuecPython Drivers 代码提交说明
 
 [[English](./README.md)]
 
