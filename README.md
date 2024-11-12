@@ -1,4 +1,4 @@
-# QuecPython_lib_bundles Code Submission Guidelines
+# QuecPython Drivers Code Submission Guidelines
 
 [[中文](./README-zh.md)]
 
