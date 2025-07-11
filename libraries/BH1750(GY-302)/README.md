@@ -1,63 +1,68 @@
 # BH1750(gy-302)
 
-**类引用：**
+
+**Class Reference: ** 
 
 ```python
 from BH1750 import Bh1750
 ```
 
- 
 
-**实例化参数：**
+**Instantiation Parameters:** 
 
-| 名称     | 必填 | 类型    | 说明 |
+| Name     | Required | Type   | Description | 
 | -------- | ---- | ------- | ---- |
-| i2c      | 是   | i2c对象 |      |
-| dev_addr | 否   | int     | 0x23 |
+| I2C      | Yes  | I2C object |      |
+| Device address | No  | int     | 0x23 | 
 
 ```python
 i2c_obj=I2C(I2C.I2C1,I2C.STANDARD_MODE)
 bh1750 = Bh1750(i2c_obj)
 ```
 
-**接口函数：**
+
+**Interface Function: ** 
 
 l **on(), off(), reset()**
 
-​	开启传感器，使传感器非活动状态，重置传感器。
 
-参数：
+Activate the sensor, put it in an inactive state, and reset the sensor. 
 
-​    无。
+Parameters: 
 
-返回值：
+No. 
 
-​    无。
+Return value: 
+
+No. 
 
 l **set_measure_mode(mode)**
 
-​	设置测量模式，持续测量或单次测量，不同精度。
 
-参数：
+Set the measurement mode, for continuous measurement or single measurement, with different levels of accuracy. 
 
-| 名称 | 必填 | 类型 | 说明                                                         |
-| ---- | ---- | ---- | ------------------------------------------------------------ |
-| mode | 否   | int  | 默认0.5lx精度；<br />0x10：（1lx精度）<br />0x13：（0.5lx精度） |
+Parameters: 
 
-返回值：
+| Name | Required | Type | Description | 
+| ---- | ---- | ---- | ------------------------- |
+| mode | No  | int  | Default: 0.5lx precision;<br />0x10: (1lx precision)<br />0x13: (0.5lx precision) | 
 
-​       无
+Return value: 
+
+No
+
 
 l **read ()**
 
-读取照度值。
 
-参数：
+Read the illuminance value. 
 
-​    无。
+Parameters: 
 
-返回值：
+No. 
 
-| 名称 | 类型 | 说明     |
+Return value: 
+
+| Name | Type | Description | 
 | ---- | ---- | -------- |
-| lux  | int  | 光照度值 |
+| lux  | int  | Illuminance value |
