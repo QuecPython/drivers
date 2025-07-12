@@ -29,15 +29,21 @@ l **set_ap(name=None, pwd=None, project_name='wifi_setap', project_version='1.0.
 ​​返回值：​​
 
 0：成功
+
 -1：失败
+
 l **wifi_on()**
+
 启用ESP8266模块并配置SLIP网络接口
 
 ​​返回值：​​
 
 0：成功
+
 -1：失败
+
 l **wifi_off()**
+
 关闭ESP8266模块并释放资源
 
 ​​返回值：​​ 无
