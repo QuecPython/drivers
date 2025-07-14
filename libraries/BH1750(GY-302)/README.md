@@ -1,7 +1,7 @@
 # BH1750(gy-302)
 
 
-**Class Reference: ** 
+**Class Reference:** 
 
 ```python
 from BH1750 import Bh1750
@@ -24,7 +24,7 @@ bh1750 = Bh1750(i2c_obj)
 ```
 
 
-**Interface Function: ** 
+**Interface Function:** 
 
 l **on(), off(), reset()**
 
