@@ -3,7 +3,7 @@
 
 Default initialization for a 2G range. 
 
-**Class Reference: ** 
+**Class Reference:** 
 
 ```python
 from adxl346 import Adxl346
@@ -26,7 +26,7 @@ adxl = Adxl346(i2c_dev)
 ```
 
 
-**Interface Function: ** 
+**Interface Function:** 
 
 l **set_range(range=0)**
 
