@@ -13,7 +13,7 @@ from esp8266 import Esp8266_ap
 
 
 
-**Interface Function: ** 
+**Interface Function:** 
 
 l **set_ap(name=None, pwd=None, project_name='wifi_setap', project_version='1.0.0')** 
 

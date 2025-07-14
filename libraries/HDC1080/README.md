@@ -1,7 +1,7 @@
 # HDC1080
 
 
-**Class Reference: ** 
+**Class Reference:** 
 
 ```python
 from hdc1080 import Hdc1080
@@ -25,7 +25,7 @@ hdc = Hdc1080(i2c_dev)
 ```
 
 
-**Interface Function: ** 
+**Interface Function:** 
 
 l **read()**
 

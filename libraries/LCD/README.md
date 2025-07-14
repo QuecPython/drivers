@@ -5,7 +5,7 @@
 ### st7789
 
 
-**Class Reference: ** 
+**Class Reference:** 
 
 ```python
 from peripheral.lcd.st7789 import St7789

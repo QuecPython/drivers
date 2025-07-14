@@ -31,7 +31,7 @@ portb = Port(1, aw)  # Port B ```
 |interrupt_flag|	int|	Interrupt flag (read-only)|
 |gpio|	int|	GPIO value| 
 
-**Main Method: ** 
+**Main Method:** 
 
 l reset()
 
