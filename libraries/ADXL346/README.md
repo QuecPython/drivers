@@ -1,167 +1,182 @@
 # adxl346
 
-默认初始化2G量程。
 
-**类引用：**
+Default initialization for a 2G range. 
+
+**Class Reference: ** 
 
 ```python
 from adxl346 import Adxl346
 ```
 
- 
 
-**实例化参数：**
 
-| 名称     | 必填 | 类型    | 说明                                |
+
+
+**Instantiation Parameters:** 
+
+| Name     | Required | Type    | Description                        | 
 | -------- | ---- | ------- | ----------------------------------- |
-| i2c      | 是   | i2c对象 | 如I2C(I2C.I2C1,  I2C.STANDARD_MODE) |
-| dev_addr | 否   | int     | 默认0x53                            |
+| I2C      | Yes  | I2C object | Such as I2C(I2C.I2C1, I2C.STANDARD_MODE) |
+| Device address | No  | int     | Default: 0x53                        | 
 
 ```python
 i2c_dev = I2C(I2C.I2C1, I2C.STANDARD_MODE)
 adxl = Adxl346(i2c_dev)
 ```
 
-**接口函数：**
+
+**Interface Function: ** 
 
 l **set_range(range=0)**
 
-设置量程。
 
-参数：
+Set the range. 
 
-| 名称  | 必填 | 类型 | 说明                                                         |
+Parameters: 
+
+| Name | Required | Type | Description | 
 | ----- | ---- | ---- | ------------------------------------------------------------ |
-| range | 否   | int  | range_2g：0；<br />range_4g ：1；<br />range_8g ：2；<br />range_16g：3 |
+| range | No | int | range_2g: 0;<br />range_4g : 1;<br />range_8g : 2;<br />range_16g: 3 | 
 
-返回值：
+Return value: 
 
-​    无。
+No. 
 
 l **int_enable(int_code,tap_thr,dur,tap_axis,laten,window,ff_thr,ff_time,act_thr,act_axis,inact_thr,inact_axis,inact_time)**
 
-​	中断使能。
 
-参数：
+Interrupt enable. 
 
-| 名称       | 必填 | 类型 | 说明                                                         |
+Parameters: 
+
+| Name       | Required | Type | Description                                           | 
 | ---------- | ---- | ---- | ------------------------------------------------------------ |
-| int_code   | 是   | int  | 中断类型<br />单击中断：0x40<br />双击中断：0x20<br />运动中断：0x10<br />静止中断：0x08<br />自由落体中断：0x04 |
-| tap_thr    | 否   | int  | 单双击中断选配<br />敲击中断阈值，默认0x30，建议不要小于该值 |
-| dur        | 否   | int  | 单双击中断选配<br />敲击期间，默认0x20，建议大于0x10         |
-| tap_axis   | 否   | int  | 单双击中断选配<br />敲击轴，默认0x07，既xyz，<br />只x轴：0x04<br />只y轴：0x02<br />只z轴：0x01 |
-| laten      | 否   | int  | 双击中断选配<br />延迟，双击需在单击检测后该段时间外触发,默认0x15 |
-| window     | 否   | int  | 双击中断选配<br />窗口，双击需在该时间内完成，默认0xff       |
-| ff_thr     | 否   | int  | 自由落体中断选配<br />加速度阈值，触发需大于该加速度，默认0x06，建议3-9 |
-| ff_time    | 否   | int  | 自由落体中断选配<br />加速度时间，触发需大于该时间，默认0x15，建议0x14-0x46 |
-| act_thr    | 否   | int  | 运动中断选配<br />加速度阈值，触发需大于该加速度，默认0x03   |
-| act_axis   | 否   | int  | 运动中断选配，运动轴，默认0xf0<br />只x轴：0xc0<br />只y轴：0xa0<br />只z轴：0x90 |
-| inact_thr  | 否   | int  | 静止中断选配<br />加速度阈值，触发需大于该加速度，默认0x03   |
-| inact_axis | 否   | int  | 静止中断选配，运动轴，默认0x0f<br />只x轴：0x0c<br />只y轴：0x0a<br />只z轴：0x09 |
-| inact_time | 否   | int  | 静止中断选配<br />静止保持时间，触发需静止大于该时间，默认0x03 |
+| int_code   | Yes  | int  | Interrupt type<br />Single-click interrupt: 0x40<br />Double-click interrupt: 0x20<br />Motion interrupt: 0x10<br />Stationary interrupt: 0x08<br />Free fall interrupt: 0x04 |
+| tap_thr    | No   | int  | Optional for single or double click interrupts<br />Click threshold, default 0x30, recommended not to be less than this value |
+| dur        | No   | int  | Optional for single or double click interrupts<br />Click duration, default 0x20, recommended to be greater than 0x10 |
+| tap_axis   | No   | int  | Optional for single or double click interrupts<br />Click axis, default 0x07, which is xyz<br />Only x-axis: 0x04<br />Only y-axis: 0x02<br />Only z-axis: 0x01 |
+| laten      | No   | int  | Optional for double click interrupts<br />Delay, double click needs to be triggered after the single click detection for this period, default 0x15 |
+| window     | No   | int  | Optional for double click interrupts<br />Window, double click needs to be completed within this time, default 0xff |
+| ff_thr     | No   | int  | Optional for free fall interrupt<br />Acceleration threshold, trigger needs to be greater than this acceleration, default 0x06, recommended 3-9 |
+| ff_time    | No   | int  | Optional for free fall interrupt<br />Acceleration time, trigger needs to be greater than this time, default 0x15, recommended 0x14-0x46 |
+| act_thr    | No   | int  | Optional for motion interrupt<br />Acceleration threshold, trigger needs to be greater than this acceleration, default 0x03 |
+| act_axis   | No   | int  | Optional for motion interrupt, motion axis, default 0xf0<br />Only x-axis: 0xc0<br />Only y-axis: 0xa0<br />Only z-axis: 0x90 |
+| inact_thr  | No   | int  | Optional for stationary interrupt<br />Acceleration threshold, trigger needs to be greater than this acceleration, default 0x03 |
+| inact_axis | No   | int  | Optional for stationary interrupt, motion axis, default 0x0f<br />Only x-axis: 0x0c<br />Only y-axis: 0x0a<br />Only z-axis: 0x09 |
+| inact_time | No   | int  | Optional for stationary interrupt<br />Stationary duration, trigger needs to be stationary for more than this time, default 0x03 | 
 
-返回值：
+Return value: 
 
-​        0 ：成功 
+0 : Success 
 
-​	  -1 ： 失败
+-1 : Failure 
 
 l **clear_int(int_code)**
 
-​	清除某中断使能。
 
-参数：
+Clear the enable of a certain interrupt. 
 
-| 名称     | 必填 | 类型 | 说明                                                         |
+Parameters: 
+
+| Name     | Required | Type | Description                                           | 
 | -------- | ---- | ---- | ------------------------------------------------------------ |
-| int_code | 是   | int  | 中断类型<br />单击中断：0x40<br />双击中断：0x20<br />运动中断：0x10<br />静止中断：0x08<br />自由落体中断：0x04 |
+| int_code | Yes | int | Interrupt type<br />Single-click interrupt: 0x40<br />Double-click interrupt: 0x20<br />Motion interrupt: 0x10<br />Stationary interrupt: 0x08<br />Free fall interrupt: 0x04 | 
 
-返回值：
+Return value: 
 
-​	无
+No
+
 
 l **read_acceleration()**
 
-​	读取三轴加速度。
 
-参数：
+Read the three-axis acceleration. 
 
-​    无。
+Parameters: 
 
-返回值：
+No. 
 
-| 名称    | 类型  | 说明                  |
+Return value: 
+
+| Name    | Type  | Description            | 
 | ------- | ----- | --------------------- |
-| (x,y,z) | tuple | x, y, z轴加速度,单位G |
+|(x, y, z) | tuple | Axial accelerations along the x, y, and z axes, in units of G | 
 
- 
+
+
 
 l **process_single_tap ()**
 
-​	循环读取中断源寄存器，单击中断检测。
 
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保单击中断使能并配置正确。
+Loop through reading the interrupt source register and click on interrupt detection. 
 
-参数：
+Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure to enable the interruption and configure it correctly. 
 
-​    无。
+Parameters: 
 
-返回值：
+No. 
 
-​	1：检测到单击中断
+Return value: 
+
+Detected a click interruption 
 
 l **process_double_tap()**
 
-​	循环读取中断源寄存器，双击中断检测。
 
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保双击中断使能并配置正确。
+Loop through reading the interrupt source register, and double-click the interrupt detection. 
 
-参数：
+Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure to enable the interrupt function and configure it correctly by double-clicking. 
 
-​    无。
+Parameters: 
 
-返回值：
+No. 
 
-​	1：检测到双击中断
+Return value: 
+
+Detected double-click interruption 
 
 l **process_act ()**
 
-​	循环读取中断源寄存器，运动中断检测。
 
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保运动中断使能并配置正确。
+Loop through reading the interrupt source register and perform motion interrupt detection. 
 
-参数：
+Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure that the motion interruption is enabled and configured correctly. 
 
-​    无。
+Parameters: 
 
-返回值：
+No. 
 
-​	1：检测到运动中断
+Return value: 
+
+Motion interruption has been detected. 
 
 l **process_inact()**
 
-​	循环读取中断源寄存器，静止中断检测。
 
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保静止中断使能并配置正确。
+Loop through reading the interrupt source register and perform static interrupt detection. 
 
-参数：
+Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure that the interrupt enable is enabled and the configuration is correct. 
 
-​    无。
+Parameters: 
 
-返回值：
+No. 
 
-​	1：检测到静止中断
+Return value: 
+
+Detected a static interruption 
 
 l **process_ff ()**
 
-​	循环读取中断源寄存器，自由落体中断检测。
 
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保自由落体中断使能并配置正确。
+Loop through reading the interrupt source register and detect free-fall interrupts. 
 
-参数：
+Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure that the free fall interruption is enabled and configured correctly. 
 
-​    无。
+Parameters: 
 
-返回值：
+No. 
 
-​	1：检测到自由落体中断
+Return value: 
+
+1: Detected a break in free fall
