@@ -17,14 +17,14 @@ from gnss_driver import Gnss
 | stopbits | is | int | Stop bits |
 | flowctl | is | int | Flow control | 
 
-**Interface Function: ** 
+**Interface Function:** 
 
 l read_gnss(retry=1, debug=0)
 
 
 Read the raw data of GNSS. 
 
-**Parameters: ** 
+**Parameters:** 
 
 | Name | Type | Default Value | Description | 
 |----|----|----|----|
