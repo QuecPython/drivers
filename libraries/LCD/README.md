@@ -1,319 +1,181 @@
-# LCD 应用指导文档
+# LCD Application Guide Document 
 
-## 接口说明
+## Interface Description 
 
 ### st7789
 
-**类引用：**
+
+**Class Reference:** 
 
 ```python
 from peripheral.lcd.st7789 import St7789
 ```
 
- 
 
-**实例化参数：**
 
-| 名称     | 必填 | 类型  | 说明                    |
+
+
+**Instantiation Parameters:** 
+
+| Name     | Required | Type  | Description            | 
 | -------- | ---- | ----- | ----------------------- |
-| InitData | 否   | tuple | 传入 LCD 的配置命令     |
-| width    | 否   | int   | LCD 屏幕的宽度，默认240 |
-| height   | 否   | int   | LCD 屏幕的高度，默认240 |
-| clk      | 否   | int   | LCD SPI 时钟，默认13000 |
+| InitData | No   | tuple | Configuration commands to be sent to the LCD |
+| width    | No   | int   | Width of the LCD screen, default 240 |
+| height   | No   | int   | Height of the LCD screen, default 240 |
+| clk      | No   | int   | LCD SPI clock, default 13000 | 
 
 ```
 lcd_test = St7789()
 ```
 
-**接口函数：**
+
+**Interface Function: ** 
 
 l **DrawPoint(x, y, color)**
 
-​	画点。
 
-参数：
+Make a dot. 
 
-| 名称  | 必填 | 类型 | 说明                                                         |
+Parameters: 
+
+| Name | Required | Type | Description | 
 | ----- | ---- | ---- | ------------------------------------------------------------ |
-| x     | 是   | int  | x坐标                                                        |
-| y     | 是   | int  | y坐标                                                        |
-| color | 是   | int  | 颜色<br />红色：0xF800<br />绿色： 0x07E0<br />蓝色： 0x001F<br />白色： 0xFFFF<br />黑色： 0x0000<br /> |
+| x     | Yes  | int  | X coordinate                                                  |
+| y     | Yes  | int  | Y coordinate                                                  |
+| color | Yes  | int  | Color<br />Red: 0xF800<br />Green: 0x07E0<br />Blue: 0x001F<br />White: 0xFFFF<br />Black: 0x0000 | 
 
-返回值：
+Return value: 
 
-​       无
+No
+
 
 l **Clear (color)**
 
-​	清屏。
 
-参数：
+Clear the screen. 
 
-| 名称  | 必填 | 类型 | 说明                                                         |
+Parameters: 
+
+| Name | Required | Type | Description | 
 | ----- | ---- | ---- | ------------------------------------------------------------ |
-| color | 是   | int  | 颜色<br />红色：0xF800<br />绿色： 0x07E0<br />蓝色： 0x001F<br />白色： 0xFFFF<br />黑色： 0x0000<br /> |
+| Color | Yes | int | Color<br />Red: 0xF800<br />Green: 0x07E0<br />Blue: 0x001F<br />White: 0xFFFF<br />Black: 0x0000 | 
 
-返回值：
+Return value: 
 
-​       无
+No
+
 
 l **Fill(x_s, y_s, x_e, y_e, color)**
 
-​	填充以起始坐标和结束坐标为对角线的矩形。
 
-参数：
+Fill a rectangle whose diagonal is defined by the starting and ending coordinates. 
 
-| 名称  | 必填 | 类型 | 说明                                                         |
+Parameters: 
+
+| Name | Required | Type | Description | 
 | ----- | ---- | ---- | ------------------------------------------------------------ |
-| x_s   | 是   | int  | 起始x坐标                                                    |
-| y_s   | 是   | int  | 起始y坐标                                                    |
-| x_e   | 是   | int  | 结束x坐标                                                    |
-| y_e   | 是   | int  | 结束x坐标                                                    |
-| color | 是   | int  | 颜色<br />红色：0xF800<br />绿色： 0x07E0<br />蓝色： 0x001F<br />白色： 0xFFFF<br />黑色： 0x0000<br /> |
+| x_s   | Yes   | int  | Starting x-coordinate                                              |
+| y_s   | Yes   | int  | Starting y-coordinate                                              |
+| x_e   | Yes   | int  | Ending x-coordinate                                              |
+| y_e   | Yes   | int  | Ending y-coordinate                                              |
+| color | Yes   | int  | Color<br />Red: 0xF800<br />Green: 0x07E0<br />Blue: 0x001F<br />White: 0xFFFF<br />Black: 0x0000<br /> | 
 
-返回值：
+Return value: 
 
-​       无
+No
 
-l **DrawLine(x0, y0, x1, y1, color)** 
 
-​	画线。
+l **DrawLine(x0, y0, x1, y1, color)**
 
-参数：
 
-| 名称  | 必填 | 类型 | 说明                                                         |
+Underline. 
+
+Parameters: 
+
+| Name | Required | Type | Description | 
 | ----- | ---- | ---- | ------------------------------------------------------------ |
-| x0    | 是   | int  | 起始x坐标                                                    |
-| y0    | 是   | int  | 起始y坐标                                                    |
-| x1    | 是   | int  | 结束x坐标                                                    |
-| y1    | 是   | int  | 结束x坐标                                                    |
-| color | 是   | int  | 颜色<br />红色：0xF800<br />绿色： 0x07E0<br />蓝色： 0x001F<br />白色： 0xFFFF<br />黑色： 0x0000<br /> |
+| x0    | Yes  | int  | Starting x-coordinate                                              |
+| y0    | Yes  | int  | Starting y-coordinate                                              |
+| x1    | Yes  | int  | Ending x-coordinate                                              |
+| y1    | Yes  | int  | Ending y-coordinate                                              |
+| color | Yes  | int  | Color<br />Red: 0xF800<br />Green: 0x07E0<br />Blue: 0x001F<br />White: 0xFFFF<br />Black: 0x0000<br /> | 
 
-返回值：
+Return value: 
 
-​	无
+No
 
-l **DrawRectangle (x0, y0, x1, y1, color)** 
 
-​	画矩形。
+l **DrawRectangle (x0, y0, x1, y1, color)**
 
-参数：
 
-| 名称  | 必填 | 类型 | 说明                                                         |
+Draw a rectangle. 
+
+Parameters: 
+
+| Name | Required | Type | Description | 
 | ----- | ---- | ---- | ------------------------------------------------------------ |
-| x0    | 是   | int  | 起始x坐标                                                    |
-| y0    | 是   | int  | 起始y坐标                                                    |
-| x1    | 是   | int  | 结束x坐标                                                    |
-| y1    | 是   | int  | 结束x坐标                                                    |
-| color | 是   | int  | 颜色<br />红色：0xF800<br />绿色： 0x07E0<br />蓝色： 0x001F<br />白色： 0xFFFF<br />黑色： 0x0000<br /> |
+| x0    | Yes  | int  | Starting x-coordinate                                              |
+| y0    | Yes  | int  | Starting y-coordinate                                              |
+| x1    | Yes  | int  | Ending x-coordinate                                              |
+| y1    | Yes  | int  | Ending y-coordinate                                              |
+| color | Yes  | int  | Color<br />Red: 0xF800<br />Green: 0x07E0<br />Blue: 0x001F<br />White: 0xFFFF<br />Black: 0x0000<br /> | 
 
-返回值：
+Return value: 
 
-​	无
+No
 
-l **DrawCircle (x0, y0, r, color)** 
 
-​	画矩形。
+l **DrawCircle (x0, y0, r, color)**
 
-参数：
 
-| 名称  | 必填 | 类型 | 说明                                                         |
+Draw a rectangle. 
+
+Parameters: 
+
+| Name | Required | Type | Description | 
 | ----- | ---- | ---- | ------------------------------------------------------------ |
-| x0    | 是   | int  | 起始x坐标                                                    |
-| y0    | 是   | int  | 起始y坐标                                                    |
-| r     | 是   | int  | 半径                                                         |
-| color | 是   | int  | 颜色<br />红色：0xF800<br />绿色： 0x07E0<br />蓝色： 0x001F<br />白色： 0xFFFF<br />黑色： 0x0000<br /> |
+| x0    | Yes  | int  | Initial x-coordinate                                              |
+| y0    | Yes  | int  | Initial y-coordinate                                              |
+| r     | Yes  | int  | Radius                                                         |
+| color | Yes  | int  | Color<br />Red: 0xF800<br />Green: 0x07E0<br />Blue: 0x001F<br />White: 0xFFFF<br />Black: 0x0000<br /> | 
 
-返回值：
+Return value: 
 
-​	无
+No
 
-l **DrawCircle (x0, y0, r, color)** 
 
-​	画矩形。
+l **DrawCircle (x0, y0, r, color)**
 
-参数：
 
-| 名称  | 必填 | 类型 | 说明                                                         |
+Draw a rectangle. 
+
+Parameters: 
+
+| Name | Required | Type | Description | 
 | ----- | ---- | ---- | ------------------------------------------------------------ |
-| x0    | 是   | int  | 起始x坐标                                                    |
-| y0    | 是   | int  | 起始y坐标                                                    |
-| r     | 是   | int  | 半径                                                         |
-| color | 是   | int  | 颜色<br />红色：0xF800<br />绿色： 0x07E0<br />蓝色： 0x001F<br />白色： 0xFFFF<br />黑色： 0x0000<br /> |
+| x0    | Yes  | int  | Initial x-coordinate                                              |
+| y0    | Yes  | int  | Initial y-coordinate                                              |
+| r     | Yes  | int  | Radius                                                         |
+| color | Yes  | int  | Color<br />Red: 0xF800<br />Green: 0x07E0<br />Blue: 0x001F<br />White: 0xFFFF<br />Black: 0x0000 | 
 
-返回值：
+Return value: 
 
-​	无
+No
 
-l **ShowChar(x, y, xsize, ysize, ch_buf, fc, bc)** 
 
-​	单字符串显示。
+l **ShowChar(x, y, xsize, ysize, ch_buf, fc, bc)**
 
-参数：
 
-| 名称   | 必填 | 类型 | 说明                   |
+Single string display. 
+
+Parameters: 
+
+| Name   | Required | Type | Description         | 
 | ------ | ---- | ---- | ---------------------- |
-| x      | 是   | int  | x坐标                  |
-| y      | 是   | int  | y坐标                  |
-| xsize  | 是   | int  | 字体宽度               |
-| ysize  | 是   | int  | 字体高度               |
-| ch_buf | 是   | int  | 存放字符的元组或者列表 |
-| fc     | 是   | int  | 字体颜色，RGB565       |
-| bc     | 是   | int  | 背景颜色，RGB565       |
-
-返回值：
-
-​	无
-
-l **ShowAscii (x, y, xsize, ysize, ch_buf, fc, bc)** 
-
-​	ASCII字符显示。
-
-参数：
-
-| 名称   | 必填 | 类型 | 说明                        |
-| ------ | ---- | ---- | --------------------------- |
-| x      | 是   | int  | x坐标                       |
-| y      | 是   | int  | y坐标                       |
-| xsize  | 是   | int  | 字体宽度                    |
-| ysize  | 是   | int  | 字体高度                    |
-| ch_buf | 是   | int  | 存放ascii字符的元组或者列表 |
-| fc     | 是   | int  | 字体颜色，RGB565            |
-| bc     | 是   | int  | 背景颜色，RGB565            |
-
-返回值：
-
-​	无
-
-l **ShowAsciiStr(x, y, xsize, ysize, str_ascii, fc, bc)** 
-
-​	ASCII字符串显示。
-
-参数：
-
-| 名称      | 必填 | 类型 | 说明                |
-| --------- | ---- | ---- | ------------------- |
-| x         | 是   | int  | x坐标               |
-| y         | 是   | int  | y坐标               |
-| xsize     | 是   | int  | 字体宽度            |
-| ysize     | 是   | int  | 字体高度            |
-| str_ascii | 是   | int  | 待显示的ASCII字符串 |
-| fc        | 是   | int  | 字体颜色，RGB565    |
-| bc        | 是   | int  | 背景颜色，RGB565    |
-
-返回值：
-
-​	无
-
-l **ShowJpg(name, start_x, start_y)** 
-
-​	显示图片，若大于屏幕则缩小显示在屏幕中间。
-
-参数：
-
-| 名称    | 必填 | 类型 | 说明      |
-| ------- | ---- | ---- | --------- |
-| name    | 是   | str  | 图片路径  |
-| start_x | 是   | int  | 起始x坐标 |
-| start_y | 是   | int  | 起始y坐标 |
-
-返回值：
-
-​	无
-
-l **lcd_show_image(image_data, x, y, width, heigth)** 
-
-​	bytearray图片显示，如果图片宽高小于80x80，可直接该函数一次性写入并显示。
-
-参数：
-
-| 名称       | 必填 | 类型      | 说明      |
-| ---------- | ---- | --------- | --------- |
-| image_data | 是   | bytearray | 图片路径  |
-| x          | 是   | int       | 起始x坐标 |
-| y          | 是   | int       | 起始y坐标 |
-| width      | 是   | int       | 图片宽度  |
-| height     | 是   | int       | 图片高度  |
-
-返回值：
-
-​	无
-
-
-
-### st7735
-
-**类引用：**
-
-```python
-from peripheral.lcd.st7735 import St7735
-```
-
- 
-
-**实例化参数：**
-
-| 名称     | 必填 | 类型  | 说明                    |
-| -------- | ---- | ----- | ----------------------- |
-| InitData | 否   | tuple | 传入 LCD 的配置命令     |
-| width    | 否   | int   | LCD 屏幕的宽度，默认128 |
-| height   | 否   | int   | LCD 屏幕的高度，默认160 |
-| clk      | 否   | int   | LCD SPI 时钟，默认13000 |
-
-```python
-lcd_test = St7735()
-```
-
-**接口函数：**
-
-同st7789
-
-
-
-### ili9225
-
-**类引用：**
-
-```python
-from peripheral.lcd.ili9225 import Ili9225
-```
-
- 
-
-**实例化参数：**
-
-| 名称     | 必填 | 类型  | 说明                    |
-| -------- | ---- | ----- | ----------------------- |
-| InitData | 否   | tuple | 传入 LCD 的配置命令     |
-| width    | 否   | int   | LCD 屏幕的宽度，默认176 |
-| height   | 否   | int   | LCD 屏幕的高度，默认220 |
-| clk      | 否   | int   | LCD SPI 时钟，默认13000 |
-
-**接口函数：**
-
-同st7789
-
-
-
-### ili9341
-
-**类引用：**
-
-```python
-from peripheral.lcd.ili9341 import Ili9341
-```
-
- 
-
-**实例化参数：**
-
-| 名称     | 必填 | 类型  | 说明                    |
-| -------- | ---- | ----- | ----------------------- |
-| InitData | 否   | tuple | 传入 LCD 的配置命令     |
-| width    | 否   | int   | LCD 屏幕的宽度，默认320 |
-| height   | 否   | int   | LCD 屏幕的高度，默认240 |
-| clk      | 否   | int   | LCD SPI 时钟，默认13000 |
-
-**接口函数：**
-
-同st7789
+| x      | Yes  | int  | X coordinate              |
+| y      | Yes  | int  | Y coordinate              |
+| xsize  | Yes  | int  | Font width                |
+| ysize  | Yes  | int  | Font height                |
+| ch_buf | Yes  | int  | Tuple or list storing characters |
+| fc     | Yes  | int  | Font color, RGB565       |
+| bc     | Yes  | int  | Background color, RGB5

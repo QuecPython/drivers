@@ -1,6 +1,6 @@
 # HDC2080
 
-**类引用：**
+**Class reference:**
 
 ```python
 from hdc2080 import Hdc2080
@@ -8,42 +8,42 @@ from hdc2080 import Hdc2080
 
 
 
-**实例化参数：**
+**Instance parameters:**
 
-| 名称     | 必填 | 类型 | 说明                    |
+| Name     | Required | Type | Description            | 
 | -------- | ---- | ---- | ----------------------- |
-| i2c_obj  | 是   | int  | i2c对象                 |
-| dev_addr | 否   | int  | i2c从设备地址，默认0x40 |
+| i2c_obj  | Yes  | int  | I2C object                |
+| dev_addr | No   | int  | I2C slave device address, default 0x40 |
 
 ```python
 i2c_dev = I2C(I2C.I2C1, I2C.STANDARD_MODE)
 hdc = Hdc2080(i2c_dev)
 ```
 
-**接口函数：**
+**Interface function:**
 
 l **read()**
 
-​	读取寄存器值转化成湿度和温度
+Read the register value and convert it into humidity and temperature. 
 
-参数：
+Parameters:
 
-​    无。
+No.
 
-返回值：
+Return value:
 
-| 名称                   | 类型  | 说明       |
+| Name                   | Type  | Description | 
 | ---------------------- | ----- | ---------- |
-| (humidity,temperature) | tuple | 湿度，温度 |
+| (humidity, temperature) | tuple | Humidity, Temperature |
 
 l **reset()**
 
-​	重置hdc1080
+Reset hdc1080.
 
-参数：
+Parameters:
 
-​    无。
+No.
 
-返回值：
+Return value:
 
-​	无。
+No.
