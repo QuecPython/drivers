@@ -1,6 +1,6 @@
 Key button driver module 
 
-**Class Reference: ** 
+**Class Reference:** 
 ```python
 from key_driver import Key
 ```
