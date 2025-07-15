@@ -1,109 +1,136 @@
 
 
-# lis2dh12
+# LIS2DH12 Accelerometer Sensor Driver User Manual
 
-默认初始化2G量程。
+## Overview
 
-**类引用：**
+This document describes how to use the LIS2DH12 accelerometer sensor driver code provided by Quectel. The LIS2DH12 is a low-power three-axis accelerometer suitable for various motion detection applications.
 
-```python
-from usr.lis2dh12 import lis2dh12
+## Key Features
+
+- Sensor initialization and reset
+- Acceleration data reading
+- Interrupt function configuration (single-click, double-click, motion detection, etc.)
+- Operation mode settings
+
+## Quick Start
+
+### 1. Initialize the Sensor
+
+python
+
+```
+def __init__(self, i2c_dev, int_pin, slave_address=0x19):
+        self._address = slave_address
+        self._i2c_dev = i2c_dev
+        self._int_pin = int_pin
+        self._extint = None
+        self._sensor_init()
 ```
 
-## **实例化参数：**
+### 2. Read Acceleration Data
 
-| 名称          | 必填 | 类型    | 说明                                |
-| ------------- | ---- | ------- | ----------------------------------- |
-| i2c_dev       | 是   | i2c对象 | 如I2C(I2C.I2C1,  I2C.STANDARD_MODE) |
-| int_pin       | 是   | int     | 连接int1的引脚gpio号                |
-| slave_address | 否   | int     | 默认0x19                            |
+python
 
-```python
-i2c_dev = I2C(I2C.I2C1, I2C.STANDARD_MODE)
-dev = lis2dh12(i2c_dev,14)
+```
+# Read three-axis acceleration data
+ def read_acceleration(self):
+        '''
+        read acceleration
+        :return: x,y,z-axis acceleration
+        '''
+
+        while 1:
+            status = self._read_data(LIS2DH12_STATUS_REG,1)[0]
+            xyzda = status & 0x08   # if xyz data exists, set 1
+            xyzor = status & 0x80
+            if not xyzda:
+                continue
+            else:
+                x,y,z = self._acceleration
+                return (x, y, z)
 ```
 
-## **接口函数：**
+### 3. Configure Interrupt Function
 
-### **sensor_reset**
+text
 
-重置传感器。
+```
+# Define interrupt callback function
+ def set_int_callback(self, cb):
+        self._extint = ExtInt(self._int_pin, ExtInt.IRQ_FALLING, ExtInt.PULL_PU, cb)
+```
 
-参数：
+## API Details
 
-​    无。
+### 1. Constructor `__init__(self, i2c_dev, int_pin, slave_address=0x19):`
 
-返回值：
+- Parameters:
+  - `i2c_dev`: I2C device object
+  - `int_pin`: GPIO number connected to the sensor interrupt pin
+  - `slave_address`: Sensor I2C address (default 0x19)
 
-​    无。
+### 2. Main Methods
 
-### **int_enable**
+#### `sensor_reset()`
 
-​	中断使能。
+Reset the sensor
 
-参数：
+#### `int_enable(int_type, int_ths=0x12, time_limit=0x18, time_latency=0x12, time_window=0x55, duration=0x03)`
 
-| 名称         | 必填 | 类型 | 说明                                                         |
-| ------------ | ---- | ---- | ------------------------------------------------------------ |
-| int_type     | 是   | int  | 中断类型（可配单双击中断，自由落体中断）<br />x单击：0x01，y单击：0x04，z单击：0x10，三轴单击：0x15<br />x双击：0x02，y双击：0x08，z双击：0x20，三轴双击：0x2A<br />自由落体：0x95 |
-| int_ths      | 是   | int  | 中断阈值，所有中断均需设置                                   |
-| time_limit   | 否   | int  | 时间限制（单双击事件），默认0x18                             |
-| time_latency | 否   | int  | 延时(双击事件设置),默认0x12                                  |
-| time_window  | 否   | int  | 时间窗口(双击事件设置)，双击得在该段时间内完成,默认0x55      |
-| duration     | 否   | int  | 延续时间，惯性中断设置，默认0x03                             |
+Enable interrupt function
 
-返回值：
+- Parameters:
+  - `int_type`: Interrupt type (e.g., XYZ_SINGLE_CLICK_INT)
+  - `int_ths`: Interrupt threshold
+  - `time_limit`: Time limit (for click interrupt)
+  - `time_latency`: Latency time (for double-click interrupt)
+  - `time_window`: Time window (for double-click interrupt)
+  - `duration`: Duration
 
-​       无
+#### `set_int_callback(cb)`
 
-### **start_sensor**
+Set interrupt callback function
 
-​	启动传感器（使能xyz轴）。
+- Parameters:
+  - `cb`: Callback function
 
-参数：
+#### `set_mode(mode)`
 
-​    无。
+Set operation mode
 
-返回值：
+- Parameters:
+  - `mode`: 0-High resolution mode, 1-Normal mode, 2-Low power mode
 
-​       无
+### 3. Main Properties
 
-### **read_acceleration**
+#### `read_acceleration`
 
-​	循环读取 STATUS_REG寄存器，有新数据则输出三轴加速度。
+Read current three-axis acceleration values (unit: g)
 
-参数：
+#### `int_processing_data()`
 
-​    无。
+Process interrupt and return current acceleration values
 
-返回值：
+## Interrupt Type Constants
 
-| 名称    | 类型  | 说明                  |
-| ------- | ----- | --------------------- |
-| (x,y,z) | tuple | x, y, z轴加速度,单位G |
+| Constant Name        | Description                     |
+| :------------------- | :------------------------------ |
+| XYZ_SINGLE_CLICK_INT | XYZ-axis single-click interrupt |
+| X_SINGLE_CLICK_INT   | X-axis single-click interrupt   |
+| Y_SINGLE_CLICK_INT   | Y-axis single-click interrupt   |
+| Z_SINGLE_CLICK_INT   | Z-axis single-click interrupt   |
+| XYZ_DOUBLE_CLICK_INT | XYZ-axis double-click interrupt |
+| MOVE_RECOGNIZE       | Motion detection interrupt      |
+| FF_RECOGNIZE         | Free-fall interrupt             |
 
- 
+## Notes
 
-### **set_int_callback()**
+1. Ensure the I2C bus is properly initialized before use
+2. The interrupt pin needs to be correctly configured
+3. Check data ready status before reading acceleration data
+4. Different operation modes affect power consumption and accuracy
 
-​	设置中断回调。（int1脚）
+## Technical Support
 
-参数：
-
-​    无。
-
-返回值：
-
-​	无。
-
- **set_mode()**
-
-​	设置中断回调。（int1脚）
-
-参数：
-
-​    无。
-
-返回值：
-
-​	无。
+For further assistance, please contact Quectel technical support team.
