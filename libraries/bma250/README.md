@@ -1,172 +1,171 @@
-# bma250
+# BMA250 Accelerometer Sensor Driver Documentation
 
-默认初始化2G量程。
+## Overview
 
-**类引用：**
+This document provides usage instructions for the BMA250 accelerometer sensor driver developed by Quectel. The BMA250 is a low-power digital triaxial acceleration sensor with flexible configuration options.
+
+## Key Features
+
+- Sensor initialization and reset
+- Configurable measurement range (±2g to ±16g)
+- Adjustable output data rate (7.81Hz to 1000Hz)
+- Multiple interrupt functions (tap, slope, orientation, etc.)
+- Acceleration data reading
+
+## Quick Start Guide
+
+### 1. Initialization
 
 ```python
-from peripheral.gsensor.bma250 import Bma250
+from machine import I2C
+from bma250 import Bma250
+
+# Initialize I2C interface
+i2c_dev = I2C(I2C.I2C1, I2C.STANDARD_MODE)
+
+# Create sensor instance
+sensor = Bma250(i2c_dev)
 ```
 
- 
-
-**实例化参数：**
-
-| 名称        | 必填 | 类型    | 说明                                |
-| ----------- | ---- | ------- | ----------------------------------- |
-| i2c         | 是   | i2c对象 | 如I2C(I2C.I2C1,  I2C.STANDARD_MODE) |
-| dev_address | 否   | int     | 默认0x19                            |
+### 2. Basic Configuration
 
 ```python
-i2c_dev = I2C(I2C.I2C1,I2C.STANDARD_MODE)
-bma250 = Bma250(i2c_dev)
+# Set measurement range (default ±2g)
+sensor.set_range(Bma250.RANGE_SEL_2G)  # Options: RANGE_SEL_2G, RANGE_SEL_4G, RANGE_SEL_8G, RANGE_SEL_16G
+
+# Set output data rate (default 7.81Hz)
+sensor.set_hz(Bma250.BW_SEL_1000)  # Options from BW_SEL_7_81 to BW_SEL_1000
 ```
 
-**接口函数：**
-
-l **set_range(range=0)**
-
-设置量程。
-
-参数：
-
-| 名称  | 必填 | 类型 | 说明                                                        |
-| ----- | ---- | ---- | ----------------------------------------------------------- |
-| range | 否   | int  | 2g：0x03；<br />4g ：0x05；<br />8g ：0x08；<br />16g：0x0c |
-
-返回值：
-
-​    无。
-
-l **set_hz(hz=0x08)**
-
-设置传感器频率带宽，默认7.81hz。
-
-参数：
-
-| 名称 | 必填 | 类型 | 说明                                                         |
-| ---- | ---- | ---- | ------------------------------------------------------------ |
-| hz   | 否   | int  | 7.81hz：0x08；<br />15.63hz ：0x09；<br />31.25hz ：0x0a；<br />62.5hz：0x0b<br />125Hz：0x0c<br />250Hz：0x0d<br />500Hz：0x0e<br />1000Hz：0x0f |
-
-返回值：
-
-​    无。
-
-l **int_enable(int_code,tap_thr,tap_dur,slop_thr,slop_dur,flat_hold_time)**
-
-​	中断使能。
-
-参数：
-
-| 名称           | 必填 | 类型 | 说明                                                         |
-| -------------- | ---- | ---- | ------------------------------------------------------------ |
-| int_code       | 是   | int  | 中断类型<br />单击中断：0x20<br />双击中断：0x10<br />倾斜中断：0x01-0x07（x,y,z轴及其组合）<br />朝向中断：0x80<br />水平中断：0x04 |
-| tap_thr        | 否   | int  | 单双击中断选配<br />敲击中断阈值，默认0x03                   |
-| tap_dur        | 否   | int  | 双击中断选配<br />默认0x04                                   |
-| slop_thr       | 否   | int  | 倾斜选配<br />阈值，默认0x14                                 |
-| slop_dur       | 否   | int  | 倾斜选配<br />默认0x03                                       |
-| flat_hold_time | 否   | int  | 水平中断选配<br />保持时间，默认0x10                         |
-
-返回值：
-
-​        0 ：成功 
-
-​	  -1 ： 失败
-
-l **reset()**
-
-​	重置。
-
-参数：
-
-​	无
-
-返回值：
-
-​	无
-
-l **read_acceleration()**
-
-​	读取三轴加速度。
-
-参数：
-
-​    无。
-
-返回值：
-
-| 名称    | 类型  | 说明                  |
-| ------- | ----- | --------------------- |
-| (x,y,z) | tuple | x, y, z轴加速度,单位G |
-
- 
-
-l **process_single_tap ()**
-
-​	循环读取中断源寄存器，单击中断检测。
-
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保单击中断使能并配置正确。
-
-参数：
-
-​    无。
-
-返回值：
-
-​	1：检测到单击中断
-
-l **process_double_tap()**
-
-​	循环读取中断源寄存器，双击中断检测。
-
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保双击中断使能并配置正确。
-
-参数：
-
-​    无。
-
-返回值：
-
-​	1：检测到双击中断
-
-l **process_slope ()**
-
-​	循环读取中断源寄存器，倾斜中断检测。
-
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保倾斜中断使能并配置正确。
-
-参数：
-
-​    无。
-
-返回值：
-
-​	1：检测到倾斜中断
-
-l **process_orient()**
-
-​	循环读取中断源寄存器，朝向中断检测。
-
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保朝向中断使能并配置正确。
-
-参数：
-
-​    无。
-
-返回值：
-
-​	1：检测到朝向中断
-
-l **process_flat ()**
-
-​	循环读取中断源寄存器，水平中断检测。
-
-​	注：未检测到中断则死循环，谨慎在主线程执行，执行前请确保水平中断使能并配置正确。
-
-参数：
-
-​    无。
-
-返回值：
-
-​	1：检测到水平中断
+### 3. Reading Acceleration Data
+
+```python
+# Read acceleration values (x, y, z in g)
+x, y, z = sensor.read_acceleration()
+print(f"X: {x}g, Y: {y}g, Z: {z}g")
+```
+
+## Interrupt Configuration
+
+### Available Interrupt Types
+
+| Interrupt Constant | Description                  |
+| :----------------- | :--------------------------- |
+| `slope_en_x`       | X-axis slope detection       |
+| `slope_en_y`       | Y-axis slope detection       |
+| `slope_en_z`       | Z-axis slope detection       |
+| `slope_en_xyx`     | Any-axis slope detection     |
+| `d_tap_en`         | Double-tap detection         |
+| `s_tap_en`         | Single-tap detection         |
+| `orient_en`        | Orientation change detection |
+| `flat_en`          | Flat position detection      |
+| `low_g_en`         | Low-g detection (free fall)  |
+| `high_g_en_x`      | X-axis high-g detection      |
+| `high_g_en_y`      | Y-axis high-g detection      |
+| `high_g_en_z`      | Z-axis high-g detection      |
+| `high_g_en_xyx`    | Any-axis high-g detection    |
+
+### Example: Configuring Tap Detection
+
+```python
+# Enable single-tap detection
+sensor.int_enable(Bma250.s_tap_en)
+
+# Wait for and process tap event
+while True:
+    if sensor.process_single_tap():
+        print("Single tap detected!")
+        x, y, z = sensor.read_acceleration()
+        print(f"Current acceleration: X={x}g, Y={y}g, Z={z}g")
+        break
+    utime.sleep_ms(10)
+```
+
+### Example: Free Fall Detection
+
+```python
+# Enable low-g (free fall) detection
+sensor.int2_enable(Bma250.low_g_en)
+
+# Wait for free fall event
+while True:
+    if sensor.process_low_g():
+        print("Free fall detected!")
+        break
+    utime.sleep_ms(10)
+```
+
+## Advanced Configuration
+
+### Interrupt Parameters
+
+The interrupt functions accept several configuration parameters:
+
+```
+# Example with all parameters (default values shown)
+sensor.int_enable(
+    int_code=Bma250.s_tap_en,
+    tap_thr=0x03,     # Tap threshold
+    tap_dur=0x04,     # Tap duration
+    slop_thr=0x14,    # Slope threshold
+    slop_dur=0x03,    # Slope duration
+    flat_hold_time=0x10  # Flat position hold time
+)
+
+sensor.int2_enable(
+    int_code=Bma250.low_g_en,
+    low_mode=0x81,    # Low-g mode
+    low_th=0x30,      # Low-g threshold
+    low_dur=0x09,     # Low-g duration
+    high_th=0xc0,     # High-g threshold
+    high_dur=0x0f     # High-g duration
+)
+```
+
+## Error Handling
+
+The driver raises `CustomError` exceptions for various error conditions:
+
+```python
+try:
+    sensor = Bma250(i2c_dev)
+    sensor.set_range(Bma250.RANGE_SEL_4G)
+except CustomError as e:
+    print(f"Error: {e}")
+```
+
+## Example Application
+
+```python
+from machine import I2C
+from bma250 import Bma250
+import utime
+
+# Initialize
+i2c_dev = I2C(I2C.I2C1, I2C.STANDARD_MODE)
+sensor = Bma250(i2c_dev)
+
+# Configure for high sensitivity
+sensor.set_range(Bma250.RANGE_SEL_2G)
+sensor.set_hz(Bma250.BW_SEL_1000)
+
+# Enable orientation detection
+sensor.int_enable(Bma250.orient_en)
+
+# Main loop
+while True:
+    if sensor.process_orient():
+        x, y, z = sensor.read_acceleration()
+        print(f"Orientation changed! Current values: X={x}g, Y={y}g, Z={z}g")
+    
+    utime.sleep_ms(100)
+```
+
+## Notes
+
+1. The sensor requires proper power supply and I2C pull-up resistors
+2. Interrupt pins must be properly configured in hardware
+3. Higher data rates consume more power
+4. Lower measurement ranges provide better resolution but smaller maximum detectable acceleration
+
+For technical support, please contact Quectel Wireless Solutions.
