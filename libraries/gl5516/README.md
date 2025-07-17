@@ -36,14 +36,14 @@ ldr_sensor = Gl5516(adc_device, ADC.ADC0)
 
 ```python
 resistance = ldr_sensor.read()
-print(f"Photoresistor resistance: {resistance}Ω")
+print("Photoresistor resistance: {}Ω".format(resistance))
 ```
 
 #### Read Raw Voltage Value
 
 ```python
 voltage = ldr_sensor.read_volt()
-print(f"Raw voltage: {voltage}mV")
+print("Raw voltage: {}mV".format(voltage))
 ```
 
 ## API Reference
@@ -89,7 +89,7 @@ while True:
     resistance = ldr.read()
     voltage = ldr.read_volt()
     
-    print(f"Light Level - Resistance: {resistance}Ω, Voltage: {voltage}mV")
+    print("Light Level - Resistance: {}Ω, Voltage: {}mV".format(resistance, voltage))
     
     if resistance > 10000:  # Dark condition
         print("Dark environment detected")

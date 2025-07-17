@@ -37,14 +37,14 @@ ldr_sensor = Gl5528(adc_device, ADC.ADC0)
 
 ```python
 resistance, lux = ldr_sensor.read()
-print(f"光敏电阻阻值: {resistance}Ω, 光照度: {lux}lux")
+print("光敏电阻阻值: {}Ω, 光照度: {}lux".format(resistance, lux))
 ```
 
 #### 读取原始电压值
 
 ```python
 voltage = ldr_sensor.read_volt()
-print(f"原始电压值: {voltage}mV")
+print("原始电压值: {}mV".format(voltage))
 ```
 
 ## API接口说明
@@ -104,9 +104,9 @@ while True:
     resistance, lux = ldr.read()
     
     if lux:
-        print(f"当前环境 - 电阻值: {resistance}Ω, 光照度: {lux}lux")
+        print("当前环境 - 电阻值: {}Ω, 光照度: {}lux".format(resistance, lux))
     else:
-        print(f"当前环境 - 电阻值: {resistance}Ω (超出测量范围)")
+        print("当前环境 - 电阻值: {}Ω (超出测量范围)".format(resistance))
     
     # 根据光照度控制逻辑
     if lux and lux > 500:

@@ -1,182 +1,212 @@
-# adxl346
+# ADXL346 Three-Axis Acceleration Sensor Driver Documentation
+## Overview 
 
+This document explains how to use the ADXL346 three-axis acceleration sensor driver module to read the motion data of the device via the I2C interface, including the values of the three-axis acceleration and the ability to configure various motion detection interrupts. 
 
-Default initialization for a 2G range. 
+## Main Features 
 
-**Class Reference:** 
+- Read the acceleration values of X/Y/Z axes
+- Set the measurement range (2g/4g/8g/16g)
+- Configure 5 types of motion detection interrupts:
+  - Single click (Single tap)
+  - Double click (Double tap)
+  - Activity detection (Activity)
+  - Inactivity detection (Inactivity)
+  - Free-fall (Free-fall)
+- Real-time interrupt status detection
+
+## Quick Start
+### 1. Import Required Modules 
+```python
+from machine import I2C
+from adxl346 import Adxl346
+import utime
+```
+### 2. Initialize the sensors 
 
 ```python
-from adxl346 import Adxl346
+# Initialize the ADXL346 sensor on the I2C1 bus, with the device address set to 0x53 
+i2c_dev = I2C(I2C.I2C1, I2C.STANDARD_MODE)
+accel_sensor = Adxl346(i2c_dev)
 ```
 
 
+### 3. Set the measurement range 
+
+```python
+# Set the range (optional: 2g/4g/8g/16g)
+accel_sensor.set_range(Adxl346.range_8g)  # Set to 8g range 
+```
 
 
+### 4. Read sensor data
+#### Read the values of the three-axis acceleration 
 
-**Instantiation Parameters:** 
+```python
+x, y, z = accel_sensor.read_acceleration()
+print("Acceleration values: X={}g, Y={}g, Z={}g".format(x, y, z)) 
+```
 
-| Name     | Required | Type    | Description                        | 
-| -------- | ---- | ------- | ----------------------------------- |
-| I2C      | Yes  | I2C object | Such as I2C(I2C.I2C1, I2C.STANDARD_MODE) |
-| Device address | No  | int     | Default: 0x53                        | 
+
+Configure and use interrupts (taking double-click detection as an example) 
+
+```python
+# Enable Double-click Detection Interruption 
+accel_sensor.int_enable(Adxl346.DOUB_TAP_INT)
+
+# Wait for and handle interrupt events 
+accel_sensor.process_double_tap()
+print("Detecting double-click event!" )
+
+# Read the current acceleration value 
+x, y, z = accel_sensor.read_acceleration()
+```
+
+## API Interface Description 
+
+### **`Adxl346(i2c, dev_addr=0x53)`**
+
+
+Construct the constructor and initialize the ADXL346 sensor. 
+
+**Parameter Description:**
+
+
+- i2c: I2C device instance
+- dev_addr: Sensor I2C address (default 0x53) 
+
+### **`set_range(range=range_2g)`**
+
+
+Set the acceleration measurement range. 
+
+**Parameter Explanation:** 
+
+- range: Range selection (range_2g, range_4g, range_8g, range_16g) 
+
+### **`read_acceleration()`**
+
+
+Read the values of the three-axis acceleration. 
+
+**Return Value: ** 
+
+- (x, y, z) Three-axis acceleration values, with units of g 
+
+### **`int_enable(int_code, **kwargs)`**
+
+
+Enable the specific interrupt function. 
+
+**Parameter Explanation:** 
+
+- int_code: Interrupt Type Selection:
+    - SING_TAP_INT: Single Click
+    - DOUB_TAP_INT: Double Click
+    - ACT_INT: Activity Detection
+    - INACT_INT: Inactivity Detection
+    - FF_INT: Free Fall
+- kwargs: Interrupt Parameters (refer to the technical description) 
+
+### Interrupt handling function. 
+
+Wait for a specific interrupt to occur: 
+
+- process_single_tap(): Single click
+- process_double_tap(): Double click
+- process_act(): Activity detection
+- process_inact(): Inactivity detection
+- process_ff(): Free fall
+
+## Application Examples 
+
+Basic data reading 
 
 ```python
 i2c_dev = I2C(I2C.I2C1, I2C.STANDARD_MODE)
 adxl = Adxl346(i2c_dev)
+adxl.set_range(Adxl346.range_8g)
+
+
+while True:
+    x, y, z = adxl.read_acceleration()
+    print("X={:.3f}g, Y={:.3f}g, Z={:.3f}g".format(x, y, z))
+    utime.sleep(1)
 ```
 
 
-**Interface Function:** 
+Double-click detection application 
+```python
+i2c_dev = I2C(I2C.I2C1, I2C.STANDARD_MODE)
+adxl = Adxl346(i2c_dev)
+adxl.int_enable(Adxl346.DOUB_TAP_INT)
 
-l **set_range(range=0)**
 
+while True:
+    # Waiting for double-click event 
+    adxl.process_double_tap()
 
-Set the range. 
+    # After the incident occurred, data was 
+    read. x, y, z = adxl.read_acceleration()
+    print("Double-click event! Current acceleration: X={}g, Y={}g, Z={}g".format(x, y, z)) 
+```
 
-Parameters: 
 
-| Name | Required | Type | Description | 
-| ----- | ---- | ---- | ------------------------------------------------------------ |
-| range | No | int | range_2g: 0;<br />range_4g : 1;<br />range_8g : 2;<br />range_16g: 3 | 
+Free fall detection 
+```python
+i2c_dev = I2C(I2C.I2C1, I2C.STANDARD_MODE)
+adxl = Adxl346(i2c_dev)
+adxl.int_enable(Adxl346.FF_INT, ff_thr=0x06, ff_time=0x15)
 
-Return value: 
 
-No. 
+while True:
+    if adxl.process_ff():
+    printf("Detecting free fall event!" )
+```
 
-l **int_enable(int_code,tap_thr,dur,tap_axis,laten,window,ff_thr,ff_time,act_thr,act_axis,inact_thr,inact_axis,inact_time)**
+## Technical Description
+### 1. Range and Resolution 
 
+| Range | Resolution | Maximum Measurement Value | |----|----|----|
+|2g |0.004g| ±2g|
+|4g |0.008g| ±4g|
+|8g |0.016g|  ±8g|
+|16g |0.032g| ±16g|
+### 2. Interruption Parameter Configuration 
 
-Interrupt enable. 
+Each interrupt type supports the following parameters:
+- Single click/double click:
+  - tap_thr: Trigger threshold (default 0x30)
+  - dur: Duration (default 0x20)
+  - tap_axis: Detection axis (default 0x07 for all axes) 
 
-Parameters: 
+- Free fall: 
 
-| Name       | Required | Type | Description                                           | 
-| ---------- | ---- | ---- | ------------------------------------------------------------ |
-| int_code   | Yes  | int  | Interrupt type<br />Single-click interrupt: 0x40<br />Double-click interrupt: 0x20<br />Motion interrupt: 0x10<br />Stationary interrupt: 0x08<br />Free fall interrupt: 0x04 |
-| tap_thr    | No   | int  | Optional for single or double click interrupts<br />Click threshold, default 0x30, recommended not to be less than this value |
-| dur        | No   | int  | Optional for single or double click interrupts<br />Click duration, default 0x20, recommended to be greater than 0x10 |
-| tap_axis   | No   | int  | Optional for single or double click interrupts<br />Click axis, default 0x07, which is xyz<br />Only x-axis: 0x04<br />Only y-axis: 0x02<br />Only z-axis: 0x01 |
-| laten      | No   | int  | Optional for double click interrupts<br />Delay, double click needs to be triggered after the single click detection for this period, default 0x15 |
-| window     | No   | int  | Optional for double click interrupts<br />Window, double click needs to be completed within this time, default 0xff |
-| ff_thr     | No   | int  | Optional for free fall interrupt<br />Acceleration threshold, trigger needs to be greater than this acceleration, default 0x06, recommended 3-9 |
-| ff_time    | No   | int  | Optional for free fall interrupt<br />Acceleration time, trigger needs to be greater than this time, default 0x15, recommended 0x14-0x46 |
-| act_thr    | No   | int  | Optional for motion interrupt<br />Acceleration threshold, trigger needs to be greater than this acceleration, default 0x03 |
-| act_axis   | No   | int  | Optional for motion interrupt, motion axis, default 0xf0<br />Only x-axis: 0xc0<br />Only y-axis: 0xa0<br />Only z-axis: 0x90 |
-| inact_thr  | No   | int  | Optional for stationary interrupt<br />Acceleration threshold, trigger needs to be greater than this acceleration, default 0x03 |
-| inact_axis | No   | int  | Optional for stationary interrupt, motion axis, default 0x0f<br />Only x-axis: 0x0c<br />Only y-axis: 0x0a<br />Only z-axis: 0x09 |
-| inact_time | No   | int  | Optional for stationary interrupt<br />Stationary duration, trigger needs to be stationary for more than this time, default 0x03 | 
+    - ff_thr: Trigger threshold (default: 0x06)
+    - ff_time: Time window (default: 0x15) 
 
-Return value: 
+- Activity Detection: 
 
-0 : Success 
+    - act_thr: Trigger threshold (default: 0x03)
+    - act_axis: Detection axis (default: 0xF0) 
 
--1 : Failure 
+- Static detection: 
 
-l **clear_int(int_code)**
+    - inact_thr: Trigger threshold (default: 0x03)
+    - inact_axis: Detection axis (default: 0x0F)
+    - inact_time: Duration of inactivity (default: 3) 
 
+### 3. Interruption Response Characteristics 
 
-Clear the enable of a certain interrupt. 
+- All interruption detection response times are at the millisecond level.
+- It is recommended to retain a delay of at least 20ms in the main loop (utime.sleep_ms(20)).
+- In actual applications, the detection threshold parameters should be adjusted according to the requirements. 
 
-Parameters: 
+Common Issues Troubleshooting 
 
-| Name     | Required | Type | Description                                           | 
-| -------- | ---- | ---- | ------------------------------------------------------------ |
-| int_code | Yes | int | Interrupt type<br />Single-click interrupt: 0x40<br />Double-click interrupt: 0x20<br />Motion interrupt: 0x10<br />Stationary interrupt: 0x08<br />Free fall interrupt: 0x04 | 
+- Check the I2C wiring and address (default 0x53)
+- Ensure the sensor is properly powered (3.3V)
+- Confirm that the interrupt pin is correctly connected and configured
+- Confirm that there is no address conflict on the I2C bus 
 
-Return value: 
-
-No
-
-
-l **read_acceleration()**
-
-
-Read the three-axis acceleration. 
-
-Parameters: 
-
-No. 
-
-Return value: 
-
-| Name    | Type  | Description            | 
-| ------- | ----- | --------------------- |
-|(x, y, z) | tuple | Axial accelerations along the x, y, and z axes, in units of G | 
-
-
-
-
-l **process_single_tap ()**
-
-
-Loop through reading the interrupt source register and click on interrupt detection. 
-
-Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure to enable the interruption and configure it correctly. 
-
-Parameters: 
-
-No. 
-
-Return value: 
-
-Detected a click interruption 
-
-l **process_double_tap()**
-
-
-Loop through reading the interrupt source register, and double-click the interrupt detection. 
-
-Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure to enable the interrupt function and configure it correctly by double-clicking. 
-
-Parameters: 
-
-No. 
-
-Return value: 
-
-Detected double-click interruption 
-
-l **process_act ()**
-
-
-Loop through reading the interrupt source register and perform motion interrupt detection. 
-
-Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure that the motion interruption is enabled and configured correctly. 
-
-Parameters: 
-
-No. 
-
-Return value: 
-
-Motion interruption has been detected. 
-
-l **process_inact()**
-
-
-Loop through reading the interrupt source register and perform static interrupt detection. 
-
-Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure that the interrupt enable is enabled and the configuration is correct. 
-
-Parameters: 
-
-No. 
-
-Return value: 
-
-Detected a static interruption 
-
-l **process_ff ()**
-
-
-Loop through reading the interrupt source register and detect free-fall interrupts. 
-
-Note: If no interruption is detected, it will result in an infinite loop. It is recommended to execute it in the main thread with caution. Before execution, make sure that the free fall interruption is enabled and configured correctly. 
-
-Parameters: 
-
-No. 
-
-Return value: 
-
-1: Detected a break in free fall
+This driver provides a complete interface for motion detection applications using the ADXL346 acceleration sensor, and is applicable to scenarios such as posture detection, impact detection, and free fall detection.

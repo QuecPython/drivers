@@ -36,14 +36,14 @@ ldr_sensor = Gl5516(adc_device, ADC.ADC0)
 
 ```python
 resistance = ldr_sensor.read()
-print(f"光敏电阻阻值: {resistance}Ω")
+print("光敏电阻阻值: {}Ω".format(resistance))
 ```
 
 #### 读取原始电压值
 
 ```python
 voltage = ldr_sensor.read_volt()
-print(f"原始电压值: {voltage}mV")
+print("原始电压值: {}mV".format(voltage))
 ```
 
 ## API接口说明
@@ -89,7 +89,7 @@ while True:
     resistance = ldr.read()
     voltage = ldr.read_volt()
     
-    print(f"光照强度 - 电阻值: {resistance}Ω, 电压值: {voltage}mV")
+    print("光照强度 - 电阻值: {}Ω, 电压值: {}mV".format(resistance, voltage))
     
     if resistance > 10000:  # 黑暗环境
         print("检测到黑暗环境")

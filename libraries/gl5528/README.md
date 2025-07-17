@@ -37,14 +37,14 @@ ldr_sensor = Gl5528(adc_device, ADC.ADC0)
 
 ```python
 resistance, lux = ldr_sensor.read()
-print(f"Photoresistor resistance: {resistance}Ω, Illuminance: {lux}lux")
+print("Photoresistor resistance: {}Ω, Illuminance: {}lux".format(resistance, lux))
 ```
 
 #### Read Raw Voltage Value
 
 ```python
 voltage = ldr_sensor.read_volt()
-print(f"Raw voltage: {voltage}mV")
+print("Raw voltage: {}mV".format(voltage))
 ```
 
 ## API Reference
@@ -104,9 +104,9 @@ while True:
     resistance, lux = ldr.read()
     
     if lux:
-        print(f"Current environment - Resistance: {resistance}Ω, Illuminance: {lux}lux")
+        print("Current environment - Resistance: {}Ω, Illuminance: {}lux".format(resistance, lux))
     else:
-        print(f"Current environment - Resistance: {resistance}Ω (Out of measurement range)")
+        print("Current environment - Resistance: {}Ω (Out of measurement range)".format(resistance))
     
     # Light-dependent control logic
     if lux and lux > 500:
