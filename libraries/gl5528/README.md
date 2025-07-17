@@ -1,73 +1,148 @@
-# gl5528
+# GL5528 Photoresistor Sensor Driver Documentation
 
-注意：光敏电阻值的计算跟接入电路有关！
+## Overview
 
-**类引用：**
+This document describes the usage of the GL5528 photoresistor sensor driver, which measures ambient light intensity and converts it to both resistance values and illuminance (lux) levels.
+
+## Key Features
+
+- Read raw ADC voltage values
+- Convert voltage to resistance values
+- Map resistance values to illuminance (lux) using predefined lookup table
+- Provides both resistance and illuminance outputs
+
+## Quick Start Guide
+
+### 1. Import Required Modules
 
 ```python
-from peripheral.illsensor.gl5528 import Gl5528
+from misc import ADC
+from gl5528 import Gl5528
+import utime as time
 ```
 
- 
-
-**实例化参数：**
-
-| 名称    | 必填 | 类型    | 说明    |
-| ------- | ---- | ------- | ------- |
-| adc_dev | 是   | ADC对象 | adc设备 |
+### 2. Initialize the Sensor
 
 ```python
-AdcDevice = ADC()
-gl5528=Gl5528(AdcDevice,ADC.ADC0)
+# Create ADC device instance
+adc_device = ADC()
+
+# Initialize GL5528 sensor on ADC channel 0
+ldr_sensor = Gl5528(adc_device, ADC.ADC0)
 ```
 
-**接口函数：**
+### 3. Read Sensor Data
 
-l **read()**
+#### Read Resistance and Illuminance
 
-​	读取光敏电阻值和光照度值（如果能转换），这里的照度范围（1-1000），会有缺失（None），有一定误差。
+```python
+resistance, lux = ldr_sensor.read()
+print("Photoresistor resistance: {}Ω, Illuminance: {}lux".format(resistance, lux))
+```
 
-​	备注：不同接线光敏电阻值计算方式可能不一致，此方法只适合我们的600s系列。
+#### Read Raw Voltage Value
 
-参数：
+```python
+voltage = ldr_sensor.read_volt()
+print("Raw voltage: {}mV".format(voltage))
+```
 
-​    无。
+## API Reference
 
-返回值：
+### `Gl5528(adc_dev, adcn)`
 
-| 名称             | 类型  | 说明         |
-| ---------------- | ----- | ------------ |
-| (resistance,lux) | tuple | 电阻值，照度 |
+Constructor for initializing the GL5528 sensor.
 
-l **read_volt ()**
+**Parameters:**
 
-​	读取电压值。
+- `adc_dev`: ADC device instance
+- `adcn`: ADC channel number (e.g., `ADC.ADC0`)
 
-​	用于计算光敏电阻值。
+### `read()`
 
-参数：
+Reads and returns both photoresistor resistance and illuminance.
 
-​    无。
+**Returns:**
 
-返回值：
+- Tuple (resistance, lux)
+  - resistance: Photoresistor value in ohms (Ω)
+  - lux: Illuminance value (may be None if out of lookup table range)
 
-| 名称 | 类型 | 说明 |
-| ---- | ---- | ---- |
-| volt | 数值 | 电压 |
+### `read_volt()`
 
- 
+Reads and returns the raw ADC voltage value.
 
-l **r2i(resis)**
+**Returns:**
 
-​	转换光敏电阻值到光照度值（如果能转换），这里的照度范围（1-1000），会有缺失（None），有一定误差。
+- Voltage value in millivolts (mV)
 
-参数：
+### `r2i(resis)`
 
-​    无。
+Converts resistance value to illuminance (lux).
 
-返回值：
+**Parameters:**
 
-| 名称      | 类型      | 说明 |
-| --------- | --------- | ---- |
-| lux或None | int或None | 照度 |
+- resis: Resistance value in ohms (Ω)
 
+**Returns:**
+
+- Illuminance value (lux) or None (if out of lookup table range)
+
+## Example Application
+
+```python
+from misc import ADC
+from gl5528 import Gl5528
+import utime as time
+
+# Initialize sensor
+adc = ADC()
+ldr = Gl5528(adc, ADC.ADC0)
+
+# Continuous light monitoring
+while True:
+    resistance, lux = ldr.read()
+    
+    if lux:
+        print("Current environment - Resistance: {}Ω, Illuminance: {}lux".format(resistance, lux))
+    else:
+        print("Current environment - Resistance: {}Ω (Out of measurement range)".format(resistance))
+    
+    # Light-dependent control logic
+    if lux and lux > 500:
+        print("Bright environment detected")
+    elif lux and lux < 100:
+        print("Dim environment detected")
+    
+    time.sleep(1)
+```
+
+## Technical Specifications
+
+1. **Resistance Calculation** based on specific voltage divider configuration:
+   - 4.7kΩ resistor (R1)
+   - 40.2kΩ resistor (R2)
+   - 3.3V power supply
+2. **Illuminance Conversion** uses predefined resistance-illuminance lookup table (o2i_table) with precise mapping for 400Ω-82kΩ range
+3. **Typical Applications**:
+   - Indoor light monitoring
+   - Automatic lighting control
+   - Ambient light sensing devices
+4. **Measurement Range**:
+   - Resistance range: ~400Ω-82kΩ
+   - Illuminance range: 1-1300lux (depending on lookup table)
+
+## Troubleshooting
+
+1. **Unstable Readings**:
+   - Check circuit connections
+   - Ensure stable power supply
+   - Avoid direct exposure to flickering light sources
+2. **None Values Returned**:
+   - Verify resistance is within 400Ω-82kΩ range
+   - Check ADC configuration
+3. **Accuracy Issues**:
+   - Extend o2i_table for higher precision
+   - Consider using higher precision ADC module
+
+This driver provides complete interface for GL5528 photoresistor, particularly suitable for applications requiring both resistance and illuminance measurements. The included lookup table enables direct conversion from resistance to standard lux values for convenient light intensity evaluation.

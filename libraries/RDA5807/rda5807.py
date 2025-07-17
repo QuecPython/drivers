@@ -281,7 +281,7 @@ class RDA5807(object):
     def fm_enable(self,flag):
         '''
         使能芯片
-        :param flag: 1.使能 0：禁用
+        :param flag: 1.使能 0:禁用
         '''
         tmp = self._ReadReg(RDA_R02)
         if(flag == 1):
