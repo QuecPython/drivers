@@ -1,35 +1,95 @@
-# aht10
+# AHT10 Temperature and Humidity Sensor Example Code Documentation
 
-**类引用：**
+## Overview
 
-```
-from aht10 import Aht10
-```
+This document describes how to use the QuecPython-based AHT10 temperature and humidity sensor for environmental monitoring. The AHT10 is a high-precision digital sensor suitable for applications such as smart homes, weather monitoring, and industrial control systems.
 
- 
+## Hardware Connection
 
-**实例化参数：**
+Ensure proper hardware connections before using the AHT10 module:
 
-| 名称  | 必填 | 类型 | 说明                    |
-| ----- | ---- | ---- | ----------------------- |
-| addre | 否   | int  | i2c从设备地址，默认0x38 |
+- I2C interface (SCL/SDA)
+- VCC connected to 3.3V power supply
+- GND grounded
+- Address selection pin (ADDR) left floating for default address 0x38
+
+## Quick Start
+
+### 1. Initialize AHT10 Module
 
 ```python
-aht_dev=Aht10()
+from machine import I2C
+from drivers.aht10 import Aht10
+
+# Initialize I2C interface (use actual I2C bus)
+i2c_obj = I2C(I2C.I2C1, I2C.FAST_MODE)
+# Initialize AHT10 sensor (default address 0x38)
+aht = Aht10(i2c_obj)
+print("AHT10 module initialized")
 ```
 
-**接口函数：**
+### 2. Basic Function Usage
 
-l **read()**
+#### Single Measurement Mode
 
-​	读取寄存器值转化成湿度和温度
+```python
+# Read temperature and humidity data
+humidity, temperature = aht.read()
+print(f'Current humidity: {humidity}%RH, temperature: {temperature}°C')
+```
 
-参数：
+#### Continuous Measurement Mode (with timing loop)
 
-​    无。
+```python
+import utime
 
-返回值：
+while True:
+    humidity, temperature = aht.read()
+    print(f'Current humidity: {humidity}%RH, temperature: {temperature}°C')
+    utime.sleep(2)  # Read every 2 seconds
+```
 
-| 名称                   | 类型  | 说明       |
-| ---------------------- | ----- | ---------- |
-| (humidity,temperature) | tuple | 湿度，温度 |
+## Precautions
+
+1. Ensure correct I2C wiring (avoid SCL/SDA reversal)
+2. Operating voltage: 3.3V ±0.1V
+3. Allow ≥15ms stabilization time before measurement
+4. Avoid extreme temperatures (-40~85°C) or humidity (>95%RH)
+
+## Troubleshooting
+
+1. **Data Read Failure**:
+   - Verify I2C connections
+   - Check 3.3V power supply
+   - Confirm I2C address (default 0x38)
+2. **Abnormal Readings**:
+   - Shield from direct sunlight/heat sources
+   - Ensure proper ventilation
+   - Reset device to clear sensor state
+
+## API Reference
+
+### Class Initialization
+
+```
+class Aht10:
+    def __init__(self, i2c, address=0x38):
+        """
+        Initialize AHT10 sensor
+        :param i2c: I2C object
+        :param address: I2C slave address (default 0x38)
+        """
+```
+
+### Core Methods
+
+|      Method Name       | Parameters |            Return Value             |              Description               |
+| :--------------------: | :--------: | :---------------------------------: | :------------------------------------: |
+|         read()         |    None    | (humidity:float, temperature:float) |     Get temperature/humidity data      |
+| get_calibration_data() |    None    |                dict                 | Retrieve sensor calibration parameters |
+
+## Supplementary Information
+
+- Datasheet: `drivers/libraries/aht10/AHT10.pdf`
+- Example code: `drivers/libraries/aht10/aht10_demo.py`
+- [I2C Interface Reference]()
