@@ -97,4 +97,4 @@ class Aht20:
 
 - **Datasheet**: `drivers/libraries/aht20/AHT20-datasheet.pdf`
 - **Example Code**: `drivers/libraries/aht20/aht20_demo.py`
-- [I2C Interface Reference]()
+- [I2C Interface Reference](https://developer.quectel.com/doc/quecpython/API_reference/en/peripherals/machine.I2C.html)

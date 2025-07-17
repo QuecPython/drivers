@@ -92,4 +92,4 @@ class Aht10:
 
 - Datasheet: `drivers/libraries/aht10/AHT10.pdf`
 - Example code: `drivers/libraries/aht10/aht10_demo.py`
-- [I2C Interface Reference]()
+- [I2C Interface Reference](https://developer.quectel.com/doc/quecpython/API_reference/en/peripherals/machine.I2C.html)
