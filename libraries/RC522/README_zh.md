@@ -130,27 +130,15 @@ from mfrc522 import Mfrc522_spi
 import utime
 
 def rc522_test():
-    # 初始化RC522模块
     reader = Mfrc522_spi(pin_rst=Pin.GPIO12, pin_irq=Pin.GPIO11)
-    print("RC522模块初始化完成")
-    
-    while True:
-        # 尝试读取卡片ID
-        card_id = reader.read_id_no_block()
-        if card_id:
-            print('检测到卡片ID: {0}'.format(card_id))
-            
-            # 读取数据
-            id, text = reader.read_no_block()
-            if text:
-                print('卡片数据:', text)
-            
-            # 写入数据
-            new_data = "Hello, RFID!" + str(utime.time())
-            reader.write(new_data)
-            print('已写入新数据:', new_data)
-        
-        utime.sleep_ms(500)
+    print("init finish.")
+    blockAddr = 0x01
+    data = [0x00,0x0A,0x10,0x00,0x0C,0x00,0xA0,0x05,0x00,0x40,0x40,0x00,0x10,0x20]
+    reader.Mfrc522_Write(blockAddr,data)
+    read_data = reader.Mfrc522_Read(blockAddr)
+    #id = reader.read_id()
+    print('card id is {0}'.format(read_data))
+    utime.sleep_ms(200)
 
 # 在新线程中运行测试
 _thread.start_new_thread(rc522_test, ())

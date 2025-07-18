@@ -151,15 +151,15 @@ battery.set_temp(temp)
 # True
 
 # Get the current battery voltage
-battery.voltage
+battery.voltage()
 # 3000
 
 # Get the current battery level
-battery.energy
+battery.energy()
 # 100
 
 # Get the current charging status
-battery.charge_status
+battery.charge_status()
 # 1
 
 ```

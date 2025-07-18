@@ -17,7 +17,7 @@ from bl0939 import Bl0939
 bl0939 = Bl0939(port=1, mode=1, clk=0)
 ```
 
-### 2. Read Measurement Data
+###  from bl0939 import Bl0939​# 参数说明: port=SPI端口号(默认1), mode=SPI模式(默认1), clk=时钟频率(默认0)bl0939 = Bl0939(port=1, mode=1, clk=0)python
 
 ```python
 # Read all parameters (Channel A current, Channel B current, voltage)
