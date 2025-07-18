@@ -152,15 +152,15 @@ battery.set_temp(temp)
 # True
 
 # 获取当前电池电压
-battery.voltage
+battery.voltage()
 # 3000
 
 # 获取当前电池电量
-battery.energy
+battery.energy()
 # 100
 
 # 获取当前充电状态
-battery.charge_status
+battery.charge_status()
 # 1
 
 ```

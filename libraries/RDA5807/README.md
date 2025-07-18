@@ -47,7 +47,7 @@ radio.vol_set(10)
 
 # Scan and play channel
 current_freq = radio.seek_channel()
-print(f"Current frequency: {current_freq}MHz")
+print("Current frequency: %d MHz" %current_freq)
 ```
 
 ## API Reference
@@ -131,7 +131,7 @@ radio.vol_set(12)  # Set medium volume
 
 # Scan and play channel
 current_freq = radio.seek_channel()
-print(f"Now playing: {current_freq}MHz")
+print("Now playing: %d MHz" %current_freq)
 
 # Switch to next channel after 5 seconds
 time.sleep(5)
@@ -143,7 +143,7 @@ radio.next_chanl()
 ```python
 while True:
     strength = radio.rssi_get()
-    print(f"Current signal strength: {strength}")
+    print("Current signal strength: ",strength)
     if strength < 30:
         print("Weak signal, rescanning...")
         radio.seek_channel()

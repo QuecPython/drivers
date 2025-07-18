@@ -59,7 +59,7 @@ sensor.set_no_motion_intr(True, threshod=100, duration_time=10, axis_direction=0
 
 ```python
 # 启用步数计数中断
-sensor.set_step_intr(True)
+sensor.set_step_intr(intr_type, en, threshod=0, axis_direction = 0)
 ```
 
 #### 抬手检测中断
@@ -75,14 +75,14 @@ sensor.set_raise_intr(True, wake_sum_th=10, wake_diff_th=1.0)
 
 ```python
 acc_data = sensor.readacc()
-print(f"X: {acc_data[0]}mg, Y: {acc_data[1]}mg, Z: {acc_data[2]}mg")
+print("当前加速度 - X: {}mg, Y: {}mg, Z: {}mg".format(acc[0], acc[1], acc[2]))
 ```
 
 #### 读取步数
 
 ```python
 step_count = sensor.readstep()
-print(f"步数: {step_count}")
+print("步数: "，step_count)
 ```
 
 #### 清除步数计数
@@ -117,26 +117,26 @@ def sensor_callback(event, data):
     elif event == qma7981.ANY_MOT_INT_X:
         print("检测到X轴运动")
     elif event == qma7981.STEP_INT:
-        print(f"步数更新: {data}")
+        print("步数更新:",data)
     elif event == qma7981.HAND_RAISE_INT:
         print("检测到抬手动作")
     # 读取当前加速度
     acc = sensor.readacc()
-    print(f"当前加速度 - X: {acc[0]}mg, Y: {acc[1]}mg, Z: {acc[2]}mg")
+    print("当前加速度 - X: {}mg, Y: {}mg, Z: {}mg".format(acc[0], acc[1], acc[2]))
 
 # 初始化传感器
 sensor = qma7981(sensor_callback, INT1=ExtInt.GPIO33, INT1_output_mode=qma7981.IRQ_FALLING)
 
 # 配置中断
-sensor.set_any_motion_intr(True, threshod=200)  # 200mg阈值
-sensor.set_step_intr(True)  # 启用步数计数
-sensor.set_raise_intr(True)  # 启用抬手检测
+sensor.set_any_motion_intr(True, threshod=200, sample_times=1)  # 200mg阈值
+sensor.set_step_intr(intr_type, en, threshod=0, axis_direction = 0)  # 启用步数计数
+sensor.set_raise_intr(en, wake_sum_th=10, wake_diff_th=1.0)  # 启用抬手检测
 
 # 主循环
 while True:
     # 每5秒读取一次步数
     steps = sensor.readstep()
-    print(f"当前总步数: {steps}")
+    print("当前总步数: ",steps)
     time.sleep(5)
 ```
 

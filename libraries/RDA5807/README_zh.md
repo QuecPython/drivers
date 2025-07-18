@@ -47,7 +47,7 @@ radio.vol_set(10)
 
 # 搜索并播放频道
 current_freq = radio.seek_channel()
-print(f"当前频率: {current_freq}MHz")
+print("当前频率: %d MHz" %current_freq)
 ```
 
 ## API详细说明
@@ -131,7 +131,7 @@ radio.vol_set(12)  # 设置中等音量
 
 # 搜索并播放频道
 current_freq = radio.seek_channel()
-print(f"正在播放: {current_freq}MHz")
+print("正在播放: %d MHz" %current_freq)
 
 # 5秒后切换到下一个频道
 time.sleep(5)
@@ -143,7 +143,7 @@ radio.next_chanl()
 ```python
 while True:
     strength = radio.rssi_get()
-    print(f"当前信号强度: {strength}")
+    print("当前信号强度: ",strength)
     if strength < 30:
         print("信号较弱，尝试重新搜索...")
         radio.seek_channel()
